@@ -171,18 +171,14 @@ ko.components.register('nepali-datepicker', {
               valueUpdate: 'afterkeydown',
           attr: { autocomplete: 'off' },
           event: { focus: handleInputFocus, blur: handleInputBlur }" />
-      <div class="np-datepicker" data-bind="visible: isPickerVisible">
+      <div class="np-datepicker" data-bind="visible: true">
 
         <!-- Toolbar Buttons -->
         <div class="np-toolbar">
-          <button tabindex="-1" data-bind="click: prevMonth">&#8592;</button>
-          <button tabindex="-1" data-bind="click: goToToday">Today</button>
-          <button tabindex="-1" data-bind="click: clearDate">Clear</button>
-          <button tabindex="-1" data-bind="click: nextMonth">&#8594;</button>
-        </div>
+          <button tabindex="-1" data-bind="click: prevMonth"><i class="fa-solid fa-chevron-left"></i></button>
+          <button tabindex="-1" data-bind="click: goToToday"><i class="fa-solid fa-house-chimney"></i></button>
+          <button tabindex="-1" data-bind="click: clearDate"><i class="fa-solid fa-ban"></i></button>
 
-        <!-- Header -->
-        <div class="np-header">
           <select tabindex="-1" class="np-scroll-select" data-bind="
               options: bsData.map(x => x.bsYear),
               value: currentYear,
@@ -197,6 +193,7 @@ ko.components.register('nepali-datepicker', {
               write: v => currentMonth(v - 1)
             })
           "></select>
+          <button tabindex="-1" data-bind="click: nextMonth"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
 
         <!-- Days Grid -->
