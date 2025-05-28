@@ -1,0 +1,35 @@
+.np-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.np-day-label, .np-day-cell {
+  text-align: center;
+  padding: 6px;
+}
+.np-day-cell.np-empty {
+  background-color: #f2f2f2;
+}
+.np-day-cell.np-clickable {
+  cursor: pointer;
+  background-color: white;
+}
+.np-day-cell.np-clickable:hover {
+  background-color: #eee;
+}
+.np-day-cell.np-selected {
+  background-color: #007bff;
+  color: white;
+}
+.np-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.np-datepicker {
+	width: 20em;
+}
+
+.form {
+	display: flex;
+}
