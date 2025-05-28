@@ -12,7 +12,6 @@ ko.components.register('nepali-datepicker', {
 		self.selectedDay = ko.observable(todayBS.bsDay);
 
 		self.inputRef = ko.observable(null);
-		self.pickerRef = ko.observable(null);
 
 		self.monthNames = [
 			{ id: 1, eng: 'Baisakh', nep: 'बैशाख' },
@@ -51,20 +50,39 @@ ko.components.register('nepali-datepicker', {
 			return days;
 		});
 
-		self.isPickerVisible = ko.observable(false);
+                self.isPickerVisible = ko.observable(false);
 
-		self.handleFocus = function () {
-			self.isPickerVisible(true);
-		};
+                self.positionPicker = function() {
+                        const input = self.inputRef();
+                        if (!input) return;
+                        const picker = input.nextElementSibling;
+                        if (!picker) return;
 
-		self.handleBlur = function (_, e) {
-			// Delay to allow clicks within the calendar to register before hiding
-			setTimeout(() => {
-				if (!e.target.contains(document.activeElement)) {
-					self.isPickerVisible(false);
-				}
-			}, 250);
-		};
+                        const inputRect = input.getBoundingClientRect();
+                        const pickerWidth = picker.offsetWidth;
+                        const viewportWidth = document.documentElement.clientWidth;
+
+                        let left = 0;
+                        if (inputRect.left + pickerWidth > viewportWidth) {
+                                left = input.offsetWidth - pickerWidth;
+                        }
+
+                        picker.style.left = left + 'px';
+                };
+
+                self.handleInputFocus = function (_, e) {
+                        self.inputRef(e.target);
+                        self.isPickerVisible(true);
+                        setTimeout(self.positionPicker, 0);
+                };
+
+                self.handleInputBlur = function (_, e) {
+                        const container = e.target.parentElement;
+                        if (e.relatedTarget && container.contains(e.relatedTarget)) {
+                                return;
+                        }
+                        self.isPickerVisible(false);
+                };
 
 		self.selectDate = function(day) {
 			self.selectedDay(day);
@@ -147,12 +165,12 @@ ko.components.register('nepali-datepicker', {
 	},
 
 	template: `
-	<div class="np-datepicker-container" data-bind="event: { focusin: handleFocus, focusout: handleBlur }">
-	  <input type="text" class="np-input" data-bind="
-		  value: inputValue,
-		  valueUpdate: 'afterkeydown',
+        <div class="np-datepicker-container">
+          <input type="text" class="np-input" data-bind="
+                  value: inputValue,
+                  valueUpdate: 'afterkeydown',
           attr: { autocomplete: 'off' },
-          event: { focus: () => inputRef($element) }" />
+          event: { focus: handleInputFocus, blur: handleInputBlur }" />
 	  <div class="np-datepicker" data-bind="visible: isPickerVisible">
 
 		<!-- Toolbar Buttons -->
