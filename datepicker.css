@@ -1,44 +1,53 @@
 .np-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: .25em;
+	padding: .5em;
 }
 .np-day-label, .np-day-cell {
-  text-align: center;
-  padding: 2px;
+	text-align: center;
+	padding: 2px;
+}
+.np-days {
+	background-color: #333;
+	color: #fff;
+	display: flex;
+	padding: 0 .5em;
+	justify-content: space-between;
+	gap: .25em;
 }
 .np-day-cell.np-empty {
-  background-color: #f2f2f2;
+	background-color: #f2f2f2;
 }
 .np-day-cell.np-clickable {
-  cursor: pointer;
-  background-color: white;
+	cursor: pointer;
+	background-color: white;
 }
 .np-day-cell.np-clickable:hover {
-  background-color: #eee;
+	background-color: #eee;
 }
 .np-day-cell.np-selected {
-  background-color: #007bff;
-  color: white;
+	background-color: #007bff;
+	color: white;
 }
 .np-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
 }
 .np-datepicker-container {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 .np-datepicker {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 15em;
-  background: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 15em;
+	background: white;
+	border: 1px solid #ccc;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	z-index: 1000;
 }
 .np-toolbar {
 	display: flex;
@@ -51,6 +60,8 @@
 		background-color: transparent;
 		border: none;
 		cursor: pointer;
+		max-height: 15em;
+		overflow-y: auto;
 	}
 }
 

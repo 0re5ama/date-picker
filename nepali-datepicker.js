@@ -86,7 +86,7 @@ ko.components.register('nepali-datepicker', {
 
         self.selectDate = function(day) {
             self.selectedDay(day);
-            const formatted = formatBSDate(self.currentYear(), self.currentMonth() + 1, day, self.format, self.locale);
+            const formatted = formatBSDate(self.currentYear(), self.currentMonth(), day, self.format, self.locale);
             self.value(formatted);
             setTimeout(() => {
                 const input = self.inputRef();
@@ -107,7 +107,7 @@ ko.components.register('nepali-datepicker', {
         self.goToToday = function() {
             const today = adToBs(new Date(), self.bsData);
             self.currentYear(today.bsYear);
-            self.currentMonth(today.bsMonth - 1);
+            self.currentMonth(today.bsMonth);
             self.selectedDay(today.bsDay);
             self.value(formatBSDate(today.bsYear, today.bsMonth, today.bsDay, self.format, self.locale));
 
@@ -119,8 +119,8 @@ ko.components.register('nepali-datepicker', {
         };
 
         self.prevMonth = function() {
-            if (self.currentMonth() === 0) {
-                self.currentMonth(11);
+            if (self.currentMonth() === 1) {
+                self.currentMonth(12);
                 self.currentYear(self.currentYear() - 1);
             } else {
                 self.currentMonth(self.currentMonth() - 1);
@@ -128,8 +128,8 @@ ko.components.register('nepali-datepicker', {
         };
 
         self.nextMonth = function() {
-            if (self.currentMonth() === 11) {
-                self.currentMonth(0);
+            if (self.currentMonth() === 12) {
+                self.currentMonth(1);
                 self.currentYear(self.currentYear() + 1);
             } else {
                 self.currentMonth(self.currentMonth() + 1);
@@ -149,7 +149,7 @@ ko.components.register('nepali-datepicker', {
                 if (parts.length === 3) {
                     const [year, month, day] = parts.map(Number);
                     self.currentYear(year);
-                    self.currentMonth(month - 1);
+                    self.currentMonth(month);
                     self.selectedDay(day);
                 }
             }
@@ -171,9 +171,7 @@ ko.components.register('nepali-datepicker', {
               valueUpdate: 'afterkeydown',
           attr: { autocomplete: 'off' },
           event: { focus: handleInputFocus, blur: handleInputBlur }" />
-      <div class="np-datepicker" data-bind="visible: true">
-
-        <!-- Toolbar Buttons -->
+      <div class="np-datepicker" data-bind="visible: isPickerVisible">
         <div class="np-toolbar">
           <button tabindex="-1" data-bind="click: prevMonth"><i class="fa-solid fa-chevron-left"></i></button>
           <button tabindex="-1" data-bind="click: goToToday"><i class="fa-solid fa-house-chimney"></i></button>
@@ -189,26 +187,27 @@ ko.components.register('nepali-datepicker', {
             optionsText: locale === 'ne' ? (m => m.nep) : (m => m.eng),
             optionsValue: 'id',
             value: ko.computed({
-              read: () => currentMonth() + 1,
-              write: v => currentMonth(v - 1)
+              read: () => currentMonth(),
+              write: v => currentMonth(v)
             })
           "></select>
           <button tabindex="-1" data-bind="click: nextMonth"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
-
-        <!-- Days Grid -->
+        <div class="np-days">
+            <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'आइत' : 'Sun'"></div>
+            <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'सोम' : 'Mon'"></div>
+            <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'मंगल' : 'Tue'"></div>
+            <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'बुध' : 'Wed'"></div>
+            <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'बिही' : 'Thu'"></div>
+            <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'शुक्र' : 'Fri'"></div>
+            <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'शनि' : 'Sat'"></div>
+        </div>
         <div class="np-grid">
-          <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'आइत' : 'Sun'"></div>
-          <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'सोम' : 'Mon'"></div>
-          <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'मंगल' : 'Tue'"></div>
-          <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'बुध' : 'Wed'"></div>
-          <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'बिही' : 'Thu'"></div>
-          <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'शुक्र' : 'Fri'"></div>
-          <div class="np-day-label" data-bind="text: $parent.locale === 'ne' ? 'शनि' : 'Sat'"></div>
           <!-- ko foreach: calendarDays -->
             <div class="np-day-cell" data-bind="
               text: $data ? ($parent.locale === 'ne' ? $parent.toDevanagari($data) : $data) : '',
               click: $data && !$parent.isDisabled($data) ? () => $parent.selectDate($data) : null,
+              event: { mousedown: $data ? (d,e)=> e.preventDefault() : null },
               css: {
                 'np-empty': !$data,
                 'np-clickable': $data && !$parent.isDisabled($data),
